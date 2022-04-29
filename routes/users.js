@@ -63,22 +63,26 @@ router.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
     const data = req.body;
     const { name, gender, age, avatar } = data;
-    const editUser = await User.findByIdAndUpdate(
-      id,
-      {
+    if (!name || !gender) {
+      errorHandle(res, "使用者資料未填寫完整");
+    } else {
+      const editContent = {
         name,
         gender,
         age,
         avatar,
-      },
-      { new: true } // 回傳更新後的資料, default: false
-    );
+      };
+      const editUser = await User.findByIdAndUpdate(
+        id,
+        editContent,
+        { new: true } // 回傳更新後的資料, default: false
+      );
 
-    if (editUser !== null) {
-      const users = await User.find();
-      successHandle(res, editUser);
-    } else {
-      errorHandle(res, "查無此 ID");
+      if (editUser !== null) {
+        successHandle(res, editUser);
+      } else {
+        errorHandle(res, "查無此 ID");
+      }
     }
   } catch (err) {
     errorHandle(res, err);
