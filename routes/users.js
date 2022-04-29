@@ -63,16 +63,20 @@ router.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
     const data = req.body;
     const { name, gender, age, avatar } = data;
-    const user = await User.findByIdAndUpdate(id, {
-      name,
-      gender,
-      age,
-      avatar,
-    });
+    const editUser = await User.findByIdAndUpdate(
+      id,
+      {
+        name,
+        gender,
+        age,
+        avatar,
+      },
+      { new: true } // 回傳更新後的資料, default: false
+    );
 
-    if (user !== null) {
+    if (editUser !== null) {
       const users = await User.find();
-      successHandle(res, users);
+      successHandle(res, editUser);
     } else {
       errorHandle(res, "查無此 ID");
     }
