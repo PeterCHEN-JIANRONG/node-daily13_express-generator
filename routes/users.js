@@ -19,14 +19,13 @@ router.post("/", async (req, res, next) => {
     } else if (gender === undefined) {
       errorHandle(res, "性別未填寫");
     } else {
-      const user = await User.create({
+      const newUser = await User.create({
         name,
         gender,
         age,
         avatar,
       });
-      const users = await User.find();
-      successHandle(res, users);
+      successHandle(res, newUser);
     }
   } catch (err) {
     errorHandle(res, err);
